@@ -2,6 +2,8 @@ import React from "react";
 import { useState, useEffect } from "react";
 import axios from "axios";
 import { FaDiceFive } from "react-icons/fa"; // Import dice icon
+import { PuffLoader } from "react-spinners"; // Import the spinner
+
 
 const App = () => {
   const [advice, setAdvice] = useState("Click the button to get advice!");
@@ -12,10 +14,10 @@ const App = () => {
     setLoading(true);
     try {
       const response = await axios.get("https://api.adviceslip.com/advice");
-      console.log(response);
       setAdvice(response.data.slip.advice);
       setAdviceId(response.data.slip.id);
     } catch (error) {
+      console.error("Error fetching advice:", error);
       setAdvice("Failed to fetch advice. Try again!");
     }
     setLoading(false);
@@ -29,8 +31,9 @@ const App = () => {
     <div className="flex flex-col items-center justify-center min-h-screen bg-[#1E293B] text-white px-4">
       <div className="bg-[#2C3E50] p-6 rounded-xl shadow-lg text-center max-w-md w-full relative">
         <p className="text-green-400 text-sm tracking-wider">ADVICE #{adviceId}</p>
-        <h1 className="text-xl font-bold my-4">"{loading ? "Loading..." : advice}"</h1>
-        <div className="w-full h-px bg-gray-500 my-4"></div>
+        <h1 className="text-xl font-bold my-4 flex justify-center">
+        {loading ? <PuffLoader color="#22c55e" size={50} /> : `"${advice}"`}
+      </h1>        <div className="w-full h-px bg-gray-500 my-4"></div>
         <button
           onClick={fetchAdvice}
           className="bg-green-500 p-4 rounded-full shadow-lg hover:bg-green-400 transition absolute -bottom-6 left-1/2 transform -translate-x-1/2"
